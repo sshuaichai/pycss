@@ -1,0 +1,57 @@
+schema_version: "0.5.0"  # 模式版本号
+
+before_install:  # 在安装之前执行的步骤
+
+  appveyor:  # 针对AppVeyor环境的配置
+    environment:  # 设置环境变量
+      RUN_ENV: .\\..\\addons\\appveyor\\run-with-visual-studio.cmd  # 设置运行环境变量
+    commands:  # 执行的命令
+      - python ../addons/appveyor/patch_vs2008.py  # 执行patch_vs2008.py脚本
+      - $<RUN_ENV> pip install numpy>=1.9.2  # 使用指定环境运行pip安装numpy>=1.9.2
+      - $<RUN_ENV> pip install cython  # 使用指定环境运行pip安装cython
+
+  circle:  # 针对CircleCI环境的配置
+    environment:  # 设置环境变量
+      PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>  # 设置路径
+    commands:  # 执行的命令
+      - rm -rf dist/*  # 删除dist目录下的所有内容
+
+  travis:  # 针对Travis CI环境的配置
+    osx:  # 针对OS X系统的配置
+      environment:  # 设置环境变量
+        PATH: $<HOME>/.pyenv/versions/$<PYTHON_VERSION>/bin:$<PATH>  # 设置路径
+      commands:  # 执行的命令
+        - python ../addons/travis/install_pyenv.py  # 执行install_pyenv.py脚本
+
+install:  # 安装依赖步骤
+
+  commands:  # 执行的命令
+    - python --version  # 输出Python版本
+    - python -m pip install --disable-pip-version-check --upgrade pip  # 更新pip
+    - $<RUN_ENV> pip install wheel>=0.29.0  # 使用指定环境运行pip安装wheel>=0.29.0
+    - $<RUN_ENV> pip install setuptools>=38.6.0  # 使用指定环境运行pip安装setuptools>=38.6.0
+    - $<RUN_ENV> pip install numpy>=1.9.2  # 使用指定环境运行pip安装numpy>=1.9.2
+    - $<RUN_ENV> pip install SimpleITK>=0.9.1  # 使用指定环境运行pip安装SimpleITK>=0.9.1
+    - $<RUN_ENV> python -c "import SimpleITK; print('SimpleITK Version:' + SimpleITK.Version_VersionString())"  # 打印SimpleITK版本信息
+    - $<RUN_ENV> pip install -r requirements.txt  # 使用指定环境运行pip安装requirements.txt中列出的所有依赖项
+    - $<RUN_ENV> pip install -r requirements-dev.txt  # 使用指定环境运行pip安装requirements-dev.txt中列出的所有依赖项
+
+before_build:  # 在构建之前执行的步骤
+
+  commands:  # 执行的命令
+    - flake8  # 运行flake8检查代码风格
+
+build:  # 构建步骤
+
+  commands:  # 执行的命令
+    - $<RUN_ENV> python setup.py develop  # 使用指定环境运行python setup.py develop，构建项目
+
+test:  # 测试步骤
+
+  commands:  # 执行的命令
+    - $<RUN_ENV> pytest  # 使用指定环境运行pytest，执行测试
+
+after_test:  # 测试完成后执行的步骤
+
+  commands:  # 执行的命令
+    - $<RUN_ENV> python setup.py bdist_wheel  # 使用指定环境运行python setup.py bdist_wheel，生成wheel文件

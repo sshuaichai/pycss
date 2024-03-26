@@ -1,0 +1,62 @@
+# 这是一个参数文件示例
+# 它按照YAML约定（www.yaml.org）编写，并由代码检查其一致性。
+# 文档结构反映了三种类型的参数：
+
+# 参数类别：
+#   设置名称: <值>
+
+# 三种参数类别分别是：
+# - setting：用于预处理和特定类别设置的设置。如果未指定<值>，则此设置的值将设置为None。
+# - featureClass：要启用的特征类别，<值>是表示启用特征的字符串列表。如果未指定<值>或<值>是空列表（'[]'），则启用此类别的所有特征。
+# - imageType：要计算特征的图像类型。如果<值>是自定义关键字参数设置（字典），如果<值>是空字典（'{}'），则不添加此输入图像的自定义设置。
+
+# 某些参数具有一组可能的值。在这种情况下，可能的值在软件包文档中列出。
+
+# 使用的设置，可能的设置在文档中列出（“定制提取”部分）。
+setting:
+  binWidth: 25  # bin的宽度
+  label: 1  # 标签
+  interpolator: 'sitkBSpline'  # 这是一个枚举值，在此处不允许为None
+  resampledPixelSpacing:  # 这将禁用重采样，因为它被解释为None，要启用它，请指定x, y, z的间距为[x, y, z]
+  weightingNorm:  # 如果未指定值，则被解释为None
+
+# 使用的图像类型："Original"表示未经过滤的图像，有关可能的过滤器，请参阅文档。
+imageType:
+  Original: {}  # 对于字典/映射，不允许None值，'{}'被解释为空字典
+
+# 必须计算特征的特征类别。如果未提及特征类别，则不会计算该类别的任何特征。
+# 否则，将计算指定的特征，或者，如果未指定特征，则计算所有特征（排除冗余/已弃用特征）。
+featureClass:
+  # 默认情况下，禁用冗余的紧凑度1、紧凑度2和球形不匹配度特征，它们可以通过指定单个特征名称（如glcm中所做的）
+   #并将它们包含在列表中来启用。
+  shape:  # 形状特征
+  firstorder: []  # 指定一个空列表具有与不指定相同的效果。
+  glcm:  # 通过指定所有其他可用的GLCM特征来禁用SumAverage
+    - 'Autocorrelation'  # 自相关性
+    - 'JointAverage'  # 共均值
+    - 'ClusterProminence'  # 聚类突显
+    - 'ClusterShade'  # 聚类阴影
+    - 'ClusterTendency'  # 聚类趋势
+    - 'Contrast'  # 对比度
+    - 'Correlation'  # 相关性
+    - 'DifferenceAverage'  # 差异均值
+    - 'DifferenceEntropy'  # 差异熵
+    - 'DifferenceVariance'  # 差异方差
+    - 'JointEnergy'  # 共能量
+    - 'JointEntropy'  # 共熵
+    - 'Imc1'  # IMC1
+    - 'Imc2'  # IMC2
+    - 'Idm'  # 反差矩
+    - 'Idmn'  # 归一化的反差矩
+    - 'Id'  # ID
+    - 'Idn'  # 归一化的ID
+    - 'InverseVariance'  # 逆方差
+    - 'MaximumProbability'  # 最大概率
+    - 'SumEntropy'  # 总熵
+    - 'SumSquares'  # 总平方和
+  glrlm:  # 对于列表，允许None值，在这种情况下，所有特征都被启用
+  glszm:  # 灰度大小区域矩阵特征
+  gldm:  # 包含已弃用特征，但由于未指定单个特征，因此未启用已弃用特征
+
+
+

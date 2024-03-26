@@ -1,0 +1,57 @@
+# 调整后的参数配置示例，针对肺癌CT数据的特征提取
+# 请根据您的实际数据和需求进一步调整这些参数
+
+# 使用的PyRadiomics版本
+#Extracted using PyRadiomics version: 3.1.0
+
+imageType:
+  Original: {}  # 保留原始图像
+  LoG:  # 使用Laplacian of Gaussian滤波器，以不同的sigma值捕获多尺度信息
+    sigma: [1.0, 2.0, 3.0, 4.0, 5.0]
+  Wavelet: {}  # 使用小波变换捕获图像的细节和纹理信息
+
+featureClass:
+  shape:  # 启用形状特征
+  firstorder: [] # 启用一阶统计特征
+  glcm:  # 启用所有灰度共生矩阵（GLCM）特征
+  glrlm:   # 启用灰度等级长度矩阵（GLRLM）特征
+  glszm:   # 启用灰度尺寸区域矩阵（GLSZM）特征
+  gldm:   # 启用灰度等级依赖矩阵（GLDM）特征
+  ngtdm:   # 启用邻域灰度差异矩阵（NGTDM）特征
+
+setting:
+  # 对于CT数据，通常情况下不需要归一化，但如果数据来自不同的扫描仪，可能需要开启
+  #归一化：启用
+  normalize: true
+  normalizeScale: 100  # 选择合适的 normalizeScale 值确保图像数据在进行特征提取之前处于一个统一的强度范围内。
+#对于肺部 CT 图像，一个常见的做法是选择一个相对较低的 normalizeScale 值，如 100 或 200，因为这些值接近于肺组织在 HU 中的自然范围。
+
+#重采样
+  # 注意：這裏使用重采樣后的圖像，就不再參數中重新定义重采样了！
+#  interpolator: 'sitkBSpline'  # 使用B样条插值方法
+#  resampledPixelSpacing: [1, 1, 1]  # 重新采样像素间距，以统一图像分辨率
+#  padDistance: 5  # 对于LoG滤波，根据最大sigma值调整填充距离
+
+
+# 掩模验证
+  minimumROIDimensions: 2
+  minimumROISize: 2
+
+# 图像离散化设置
+  binWidth: 25  # 离散化的bin宽度，根据数据范围调整
+
+# 一阶特征特定设置
+  voxelArrayShift: 1000  # 防止负值被平方的偏移量
+
+# 标签值设置
+  label: 1  # 默认标签值
+
+
+#归一化：我将normalize设置为false作为默认选项，考虑到CT扫描的HU值通常在不同扫描仪之间具有可比性。
+#  如果您确定数据之间存在显著的扫描参数差异，可以考虑开启归一化。
+
+#LoG sigma值：已根据常用实践选择一系列sigma值。如果您希望捕获更细微的纹理，请根据需要添加更小的sigma值。
+
+#重采样间距：默认设置为[1, 1, 1]，这适用于大多数CT扫描数据。如果您的数据具有显著不同的体素间距，可能需要调整此参数以匹配最常见的间距。
+
+#padDistance：调整为5，以减少对边界效应的需要。如果您使用的最大sigma值大于5，可能需要进一步增加此值。

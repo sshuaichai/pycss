@@ -1,0 +1,17 @@
+imageType:
+  Original: {}  # 原始图像类型
+
+featureClass:
+  glcm:
+    - JointEntropy  # GLCM（灰度共生矩阵）特征类，提取 JointEntropy 特征
+
+setting:
+  binWidth: 25  # 灰度级别的宽度（bin width）
+  force2D: true  # 强制转换成二维图像进行特征提取
+  label: 1  # 用于提取特征的标签值
+
+voxelSetting:
+  kernelRadius: 2  # 体素卷积核的半径
+  maskedKernel: true  # 是否使用掩码的核
+  initValue: nan  # 初始值
+  voxelBatch: 10000  # 体素的批处理大小

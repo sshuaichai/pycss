@@ -1,0 +1,5 @@
+INFO:radiomics.batch: pyradiomics version: v3.0.1
+INFO:radiomics.batch: Loading CSV
+INFO:radiomics.batch: CSV loaded
+INFO:radiomics.batch: Cases: 141
+INFO:radiomics.featureextractor: Loading parameter dictionary

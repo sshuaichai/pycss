@@ -1,0 +1,17 @@
+Feature Category,Count
+diagnostics,22
+original,107
+log-sigma-1-0-mm-3D,93
+log-sigma-2-0-mm-3D,93
+log-sigma-3-0-mm-3D,93
+log-sigma-4-0-mm-3D,93
+log-sigma-5-0-mm-3D,93
+wavelet-LLH,93
+wavelet-LHL,93
+wavelet-LHH,93
+wavelet-HLL,93
+wavelet-HLH,93
+wavelet-HHL,93
+wavelet-HHH,93
+wavelet-LLL,93
+Total,1338

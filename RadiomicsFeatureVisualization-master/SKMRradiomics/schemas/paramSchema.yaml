@@ -1,0 +1,158 @@
+# 参数模式
+name: 参数模式
+desc: 此模式定义了可以传递给pyradiomics包的参数文件中可能存在的参数。
+type: map
+mapping:
+  setting: &settings
+    type: map
+    mapping:
+      minimumROIDimensions:  # 最小ROI维度
+        type: int
+        range:
+          min: 1
+          max: 3
+      minimumROISize:  # 最小ROI大小
+        type: int
+        range:
+          min-ex: 0
+      geometryTolerance:  # 几何公差
+        type: float
+        range:
+          min-ex: 0
+      correctMask:  # 纠正掩码
+        type: bool
+      additionalInfo:  # 额外信息
+        type: bool
+      label:  # 标签
+        type: int
+      binWidth:  # 直方图宽度
+        type: float
+        range:
+          min-ex: 0
+      binCount:  # 直方图数量
+        type: int
+        range:
+          min-ex: 0
+      normalize:  # 标准化
+        type: bool
+      normalizeScale:  # 标准化比例
+        type: float
+        range:
+          min-ex: 0
+      removeOutliers:  # 移除异常值
+        type: float
+        range:
+          min-ex: 0
+      resampledPixelSpacing:  # 重采样像素间距
+        seq:
+          - type: float
+            range:
+              min: 0
+      interpolator:  # 插值器
+        type: any
+        func: checkInterpolator
+      padDistance:  # 填充距离
+        type: int
+        range:
+          min: 0
+      distances:  # 距离
+        seq:
+          - type: int
+            range:
+              min-ex: 0
+      force2D:  # 强制2D
+        type: bool
+      force2Ddimension:  # 强制2D维度
+        type: int
+        range:
+          min: 0
+          max: 2
+      resegmentRange:  # 重新分割范围
+        seq:
+          - type: float
+      resegmentMode:  # 重新分割模式
+        type: str
+        enum: ['absolute', 'relative', 'sigma']
+      resegmentShape:  # 重新分割形状
+        type: bool
+      preCrop:  # 预裁剪
+        type: bool
+      sigma:  # Sigma
+        seq:
+          - type: float
+            range:
+              min-ex: 0
+      start_level:  # 开始层级
+        type: int
+        range:
+          min: 0
+      level:  # 层级
+        type: int
+        range:
+          min-ex: 0
+      wavelet:  # 小波
+        type: str
+        func: checkWavelet
+      gradientUseSpacing:  # 梯度使用间距
+        type: bool
+      lbp2DRadius:  # 2D LBP半径
+        type: float
+        range:
+          min-ex: 0
+      lbp2DSamples:  # 2D LBP样本
+        type: int
+        range:
+          min: 1
+      lbp2DMethod:  # 2D LBP方法
+        type: str
+        enum: ['default', 'ror', 'uniform', 'var']
+      lbp3DLevels:  # 3D LBP层级
+        type: int
+        range:
+          min: 1
+      lbp3DIcosphereRadius:  # 3D LBP Icosphere半径
+        type: float
+        range:
+          min-ex: 0
+      lbp3DIcosphereSubdivision:  # 3D LBP Icosphere细分
+        type: int
+        range:
+          min: 0
+      voxelArrayShift:  # 体素数组偏移
+        type: int
+      symmetricalGLCM:  # 对称GLCM
+        type: bool
+      weightingNorm:  # 权重规范
+        type: any
+        func: checkWeighting
+      gldm_a:  # GLDM参数a
+        type: int
+        range:
+          min: 0
+
+  voxelSetting:  # 体素设置
+    type: map
+    mapping:
+      kernelRadius:  # 核半径
+        type: int
+        range:
+          min-ex: 0
+      maskedKernel:  # 掩膜核
+        type: bool
+      initValue:  # 初始值
+        type: float
+
+  featureClass:  # 特征类
+    type: map
+    func: checkFeatureClass
+    matching-rule: 'any'
+    mapping:
+      regex;(.+):
+        type: any
+
+  imageType:  # 图像类型
+    type: map
+    func: checkImageType
+    matching-rule: 'any'
+    mapping:
+       regex;(.+): *settings

@@ -1,0 +1,57 @@
+# 这是一个参数文件示例
+# 它根据YAML约定(www.yaml.org)编写，并且代码会检查其一致性。
+# 文档结构中反映了三种可能的参数类型：
+#
+# 参数类别：
+#   设置名称: <值>
+#
+# 三个参数类别分别是：
+# - setting: 用于预处理和类特定设置的设置。如果没有指定<值>，则此设置的值设为None。
+# - featureClass: 要启用的特征类，<值>是表示启用特征的字符串列表。如果没有指定<值>或<值>是空列表('[]')，则启用此类的所有特征。
+# - imageType: 计算特征的图像类型。<值>是自定义kwarg设置（字典）。如果<值>是空字典('{}')，则不为此输入图像添加自定义设置。
+#
+# 一些参数有可能值的限定列表。在这种情况下，可能的值在包文档中列出
+
+# 使用的设置，可能的设置在文档中列出（章节"自定义提取"）。
+setting:
+  binWidth: 25  # 直方图宽度
+  label: 1  # 标签
+  interpolator: 'sitkBSpline' # 这是一个枚举值，这里不允许None
+  resampledPixelSpacing: # 这将禁用重采样，因为它被解释为None，要启用它，请指定x, y, z的间距为[x, y, z]
+  weightingNorm: # 如果没有指定值，它被解释为None
+  correctMask: True  # 纠正掩码
+  geometryTolerance: 0.1  # 几何公差
+
+
+
+# 使用的图像类型："Original"表示未过滤的图像，可能的过滤器，请查看文档。
+imageType:
+  Original: {} # 对于字典/映射，不允许None值，'{}'被解释为一个空字典
+  LoG:
+    # 如果你包含的sigma值>5，记得也要增加padDistance。因为重采样到(2, 2, 2)，不推荐使用<2mm的sigma。
+    sigma: [1.0, 2.0, 3.0, 4.0, 5.0]
+  Wavelet: {}
+
+# 必须计算的特征类。如果没有提到某个特征类，则不计算该类的任何特征。否则，将计算指定的特征，或者，如果没有指定，则计算所有特征。
+featureClass:
+  shape:  # 通过指定所有其他形状特征来禁用冗余的Compactness 1和Compactness 2特征
+  firstorder: ['Median', 'Minimum'] # 指定空列表与不指定任何内容效果相同。
+  glcm: ['InverseVariance']  # 灰度共生矩阵的逆方差
+  glrlm: # 对于列表，允许None值，在这种情况下，启用所有特征
+  glszm:
+  gldm:
+  ngtdm: ['Strength']
+
+voxelSetting:
+  kernelRadius: 3  # 内核半径：2、3 有意义
+  maskedKernel: true
+  initValue: nan
+  voxelBatch: 10000
+
+
+
+
+
+
+
+

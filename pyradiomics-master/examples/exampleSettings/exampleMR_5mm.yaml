@@ -1,0 +1,73 @@
+# 这是一个用于分析MR数据的起始设置示例，其中具有较大（约5mm）的切片厚度。这仅仅是一个起点，不太可能是您的数据集的最佳设置。'
+# 在确定更好的值时，一些注意事项已经作为注释添加到相应位置。
+
+# 在调整和使用这些设置进行分析时，请确保添加所使用的PyRadiomics版本，以便您可以在以后轻松重新创建提取结果：'
+
+# #############################  Extracted using PyRadiomics version:  3.1.0  ######################################
+
+imageType:
+  Original: {}
+  LoG:
+    # 由于重采样为（3, 3, 3），不推荐使用小于3mm的sigma值。
+    sigma: [3.0, 5.0]
+  Wavelet: {}
+
+featureClass:
+  # 冗余的Compactness 1、Compactness 2和Spherical Disproportion特征默认禁用，它们可以通过指定单个特征名称（如glcm中所做的）并将其包含在列表中启用。
+  shape:
+  firstorder:
+  glcm:  # 通过指定所有其他GLCM特征来禁用SumAverage
+    - 'Autocorrelation'
+    - 'JointAverage'
+    - 'ClusterProminence'
+    - 'ClusterShade'
+    - 'ClusterTendency'
+    - 'Contrast'
+    - 'Correlation'
+    - 'DifferenceAverage'
+    - 'DifferenceEntropy'
+    - 'DifferenceVariance'
+    - 'JointEnergy'
+    - 'JointEntropy'
+    - 'Imc1'
+    - 'Imc2'
+    - 'Idm'
+    - 'Idmn'
+    - 'Id'
+    - 'Idn'
+    - 'InverseVariance'
+    - 'MaximumProbability'
+    - 'SumEntropy'
+    - 'SumSquares'
+  glrlm:
+  glszm:
+  gldm:
+
+setting:
+  # 归一化：
+  # MR信号通常是相对的，不同扫描仪和供应商之间存在很大差异。通过在特征计算之前对图像进行归一化，可以减少这种混杂效应。
+  # 但是，如果只使用一个特定的扫描仪，或者图像反映了一些绝对的世界值（例如ADC图，T2maps（不是T2加权）），请考虑禁用归一化。
+  normalize: true
+  normalizeScale: 100  # 这使您可以使用更多或更少相同的bin宽度。
+
+  # 重采样：
+  # 增加重采样间距会强制PyRadiomics查看更粗糙的纹理，这可能会增加提取的特征的准确性和稳定性。在大切片中使用小间距会生成许多插值的体素，可能会“掩盖”图像中包含的信号。
+  interpolator: 'sitkBSpline'
+  resampledPixelSpacing: [3, 3, 3]
+
+  # 掩模验证：
+  # 不需要correctMask和geometryTolerance，因为图像和掩模都会被重采样，如果您期望的掩模非常小，请考虑取消注释下面的设置以启用大小约束：
+  #minimumROIDimensions: 2
+  #minimumROISize: 50
+
+  # 图像离散化：
+  # 理想的bin数量大致在16-128个bin的范围内。定义一个好的bin宽度的一种可能方式是从要分析的数据集中提取firstorder:Range，并选择binwidth，使得range/binwidth大致保持在这个bin范围内。
+  binWidth: 5
+
+  # 一阶特征特定设置：
+  # 当归一化时，低于平均值的灰度值将为负值。通过偏移300（3 StdDevs * 100），确保大多数体素为正值（仅超出均值3个标准差以下的离群值将为负值）。
+  voxelArrayShift: 300
+
+  # 杂项：
+  # 默认标签值。标签也可以在对featureextractor.execute的调用中定义，作为命令行参数，或者在输入CSV中的“Label”列中（批处理）。
+  label: 1

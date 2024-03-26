@@ -1,0 +1,77 @@
+# 这是一个用于分析MR数据的起始设置示例，其切片厚度较小（约3mm）。这仅仅是一个起点，不太可能是您的数据集的最佳设置。'
+# 一些关于确定更好值的注意事项已经作为注释添加到适当的位置。
+
+# 在调整和使用这些设置进行分析时，请确保添加所使用的PyRadiomics版本，以便您可以在以后轻松重新创建提取结果：'
+
+# #############################  Extracted using PyRadiomics version:  3.1.0  ######################################
+
+imageType:
+  Original: {}
+  LoG:
+    # 如果您包含 >5 的 sigma 值，请记得同时增加 padDistance。由于重采样为(2, 2, 2)，不建议使用 <2 mm 的 sigma。
+    sigma: [2.0, 3.0, 4.0, 5.0]
+  Wavelet: {}
+
+featureClass:
+  # 冗余的 Compactness 1、Compactness 2 和 Spherical Disproportion 特征默认禁用，可以通过指定单个特征名称（如 glcm 中所做的）并将其包含在列表中启用。
+  shape:
+  firstorder:
+  glcm:  # 通过指定所有其他 GLCM 特征来禁用 SumAverage
+    - 'Autocorrelation'
+    - 'JointAverage'
+    - 'ClusterProminence'
+    - 'ClusterShade'
+    - 'ClusterTendency'
+    - 'Contrast'
+    - 'Correlation'
+    - 'DifferenceAverage'
+    - 'DifferenceEntropy'
+    - 'DifferenceVariance'
+    - 'JointEnergy'
+    - 'JointEntropy'
+    - 'Imc1'
+    - 'Imc2'
+    - 'Idm'
+    - 'Idmn'
+    - 'Id'
+    - 'Idn'
+    - 'InverseVariance'
+    - 'MaximumProbability'
+    - 'SumEntropy'
+    - 'SumSquares'
+  glrlm:
+  glszm:
+  gldm:
+
+setting:
+  # 归一化：
+  # MR信号通常是相对的，不同扫描仪和供应商之间存在较大差异。通过在特征计算之前对图像进行归一化，可以减少这种混淆效应。
+  # 但是，如果只使用一个特定的扫描仪，或者图像反映某种绝对世界值（例如ADC图、T2maps（而不是T2加权）），考虑禁用归一化。
+  normalize: true
+  normalizeScale: 100  # 这使您可以使用更多或更少相同的 bin 宽度。
+
+  # 重采样：
+  # 如果切片非常薄（~1mm），例如在3D扫描（各向同性）体积中，重采样像素间距可能减少到（1, 1, 1）。此外，在各向同性体积的情况下，考虑禁用重采样。
+  # 附注：增加重采样间距会强制PyRadiomics查看更粗糙的纹理，这可能会或可能不会提高提取特征的准确性和稳定性。
+  interpolator: 'sitkBSpline'
+  resampledPixelSpacing: [2, 2, 2]
+
+  # 掩模验证：
+  # 不需要 correctMask 和 geometryTolerance，因为图像和掩模都将被重采样，如果您期望的掩模非常小，请考虑取消注释下面的设置以启用大小约束：
+  #minimumROIDimensions: 2
+  #minimumROISize: 50
+
+  # 图像离散化：
+  # 理想的 bin 数量大致在16-128个 bin 的范围内。定义一个好的 bin 宽度的一种可能方式是从要分析的数据集中提取 firstorder:Range，并选择 binwidth，使得 range/binwidth 大致保持在这个 bin 范围内。
+  binWidth: 5
+
+  # 一阶特征特定设置：
+  # 当进行归一化时，低于平均值的灰度值将为负数。通过增加300（3个标准偏差 * 100）确保大多数体素为正数（只有低于平均值3个标准偏差的异常值将为负数）。
+  voxelArrayShift: 300
+
+  # 杂项：
+  # 默认标签值。标签也可以在对 featureextractor.execute 的调用中定义，作为命令行参数，或者在输入 CSV 中的“Label”列中（批处理）。
+  label: 1
+
+
+

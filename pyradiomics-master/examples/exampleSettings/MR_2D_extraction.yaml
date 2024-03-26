@@ -1,0 +1,74 @@
+# 这是一个可以用作从MR数据中提取2D特征的起点设置示例'
+# 这仅仅是一个起点，并不太可能是您的数据集的最佳设置。
+# 在适应并使用这些设置进行分析时，请确保添加所使用的PyRadiomics版本，以便您可以在以后轻松重新创建提取：
+
+# #############################  Extracted using PyRadiomics version: 3.1.0 ######################################
+
+imageType:
+  Original: {}  # 原始图像
+  LoG:
+    sigma: [2.0, 3.0, 4.0, 5.0]  # LoG滤波器的sigma值
+  Wavelet: {}  # 小波变换
+
+featureClass:
+  shape2D:  # 二维形状特征
+  firstorder:  # 一阶特征
+  glcm:  # 灰度共生矩阵特征
+    - 'Autocorrelation'  # 自相关性
+    - 'JointAverage'  # 共均值
+    - 'ClusterProminence'  # 聚类突显
+    - 'ClusterShade'  # 聚类阴影
+    - 'ClusterTendency'  # 聚类趋势
+    - 'Contrast'  # 对比度
+    - 'Correlation'  # 相关性
+    - 'DifferenceAverage'  # 差异均值
+    - 'DifferenceEntropy'  # 差异熵
+    - 'DifferenceVariance'  # 差异方差
+    - 'JointEnergy'  # 共能量
+    - 'JointEntropy'  # 共熵
+    - 'Imc1'  # IMC1
+    - 'Imc2'  # IMC2
+    - 'Idm'  # 反差矩
+    - 'Idmn'  # 归一化的反差矩
+    - 'Id'  # ID
+    - 'Idn'  # 归一化的ID
+    - 'InverseVariance'  # 逆方差
+    - 'MaximumProbability'  # 最大概率
+    - 'SumEntropy'  # 总熵
+    - 'SumSquares'  # 总平方和
+  glrlm:  # 灰度共生矩阵特征
+  glszm:  # 灰度大小区域矩阵特征
+  gldm:  # 灰度依赖矩阵特征
+  ngtdm:  # 邻近灰度差异矩阵特征
+
+setting:
+  # 归一化:
+  normalize: true  # 是否进行归一化
+  normalizeScale: 100  # 归一化比例
+
+  # 重采样:
+  # 前两个维度始终对应于平面分辨率。
+  # 为避免掩膜错误（在重采样后大于1个切片），不应修改Z平面分辨率。
+  interpolator: 'sitkBSpline'  # 插值器类型
+  resampledPixelSpacing: [2, 2, 0]  # 重采样后的像素间距，[x, y, z]
+  padDistance: 10  # 填充距离
+  preCrop: true  # 是否预裁剪
+
+  # 2D设置
+  # force2Ddimension 设置相对于采集平面。
+  # 例如，轴位（0）对应于MRI体积的采集平面（轴位、矢状位或冠状位）。
+  # 因此，在大多数情况下，此设置不应修改。
+  force2D: true  # 是否强制为2D
+  force2Ddimension: 0  # 强制为2D的维度
+
+  # 图像离散化:
+  # 此参数应通过分析数据集的一阶范围进行估计，并选择尽可能接近30-130范围的值。
+  binWidth: 5  # 图像离散化的bin宽度
+
+  # 一阶特征特定设置:
+  voxelArrayShift: 300  # 体素数组的偏移量
+
+  # 杂项:
+  label: 1  # 标签值
+
+

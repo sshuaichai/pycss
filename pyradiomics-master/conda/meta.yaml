@@ -1,0 +1,51 @@
+package:
+  name: "pyradiomics"  # 包的名称为 "pyradiomics"
+  version: "{{ GIT_DESCRIBE_TAG }}"  # 版本号使用环境变量 GIT_DESCRIBE_TAG
+
+source:
+  path: ../  # 源代码路径为上级目录
+
+build:
+  number: "{{ GIT_DESCRIBE_NUMBER }}"  # 构建号使用环境变量 GIT_DESCRIBE_NUMBER
+  entry_points:
+    - pyradiomics=radiomics.scripts.__init__:parse_args  # 定义入口点
+
+requirements:
+  build:
+    - {{ compiler('c') }}  # 编译器为 C 编译器
+    - python  # Python 编译器
+    - git  # Git 工具
+  host:
+    - python  # 主机环境需要 Python
+    - numpy >=1.9.2  # 需要安装版本大于等于 1.9.2 的 numpy 库
+    - pip  # pip 工具
+    - pykwalify >=1.6.0  # 需要安装版本大于等于 1.6.0 的 pykwalify 库
+    - pywavelets >=0.4.0  # 需要安装版本大于等于 0.4.0 的 pywavelets 库
+    - SimpleITK !=1.1.0  # 需要安装非 1.1.0 版本的 SimpleITK 库
+    - six >=1.10.0  # 需要安装版本大于等于 1.10.0 的 six 库
+  run:
+    - python  # 运行时需要 Python
+    - numpy >=1.9.2  # 需要安装版本大于等于 1.9.2 的 numpy 库
+    - pykwalify >=1.6.0  # 需要安装版本大于等于 1.6.0 的 pykwalify 库
+    - pywavelets >=0.4.0  # 需要安装版本大于等于 0.4.0 的 pywavelets 库
+    - SimpleITK !=1.1.0  # 需要安装非 1.1.0 版本的 SimpleITK 库
+    - six >=1.10.0  # 需要安装版本大于等于 1.10.0 的 six 库
+    - scipy  # 需要安装 scipy 库
+    - scikit-learn  # 需要安装 scikit-learn 库
+    - trimesh  # 需要安装 trimesh 库
+
+about:
+  home: http://github.com/Radiomics/pyradiomics#readme  # 包的主页
+  license: BSD  # 许可证为 BSD
+  license_family: BSD  # 许可证类型为 BSD
+  license_file: LICENSE.txt  # 许可证文件为 LICENSE.txt
+  summary: Radiomics features library for python  # 包的简介，用于描述功能库
+  doc_url: https://pyradiomics.readthedocs.io/en/latest/  # 文档 URL
+  dev_url:   # 开发者 URL
+
+extra:
+  recipe-maintainers:  # 配方维护者列表
+    - JoostJM
+    - fedorov
+    - pieper
+    - hugoaerts

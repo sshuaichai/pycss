@@ -1,0 +1,30 @@
+imageType:
+  Original: {}  # 保留原始图像
+#  LoG:  # 使用Laplacian of Gaussian滤波器，以不同的sigma值捕获多尺度信息
+#    sigma: [1.0, 2.0, 3.0, 4.0, 5.0]
+#  Wavelet: {}  # 使用小波变换捕获图像的细节和纹理信息
+#  一样的，体素没有滤波器
+
+featureClass:
+  firstorder: {}  # 启用所有一阶统计特征
+  glcm: {}  # 启用所有灰度共生矩阵特征
+  glrlm: {}  # 启用所有灰度游程长度矩阵特征
+  glszm: {}  # 启用所有灰度大小区域矩阵特征
+  gldm: {}  # 启用所有灰度等级依赖矩阵特征
+  ngtdm: {}  # 启用所有邻域灰度差异矩阵特征
+  # shape: {}  # 形状特征通常不适用于体素级特征提取，如果需要，取消注释此行
+
+# R1B12、R1B25、R3B12 和 R3B25;
+#使用 R3B12 计算的放射组学具有最高的重复性，所有特征的 ICC LCL 中位数 (IQR) 为 0.442 (0.312–0.516)，
+# 对于设置 R1B12、R1B25 和 R3B25，分别为 0.415 (0.306–0.516)
+#Identification of Precise 3D CT Radiomics for Habitat Computation by Machine Learning in Cancer
+setting:
+  binWidth: 12  #  R3B12
+  # force2D: true  #根据您的研究需求，您可以选择进行3D特征提取或通过设置 force2D: true 进行2D特征提取。如果处理3D图像，此行应保持注释或移除。
+  label: 1
+
+voxelSetting:
+  kernelRadius: 3  # 内核半径：2、3 有意义
+  maskedKernel: true
+  initValue: nan
+  voxelBatch: 10000

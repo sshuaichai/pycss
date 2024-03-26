@@ -1,0 +1,37 @@
+# 这是一个包含所有形状特征启用的参数文件示例，包括那些标记为冗余/已弃用的：
+# - 紧凑度1
+# - 紧凑度2
+# - 球形不匹配度
+
+setting = {
+    'label': 1,  # 设置用于提取特征的标签
+    'interpolator': 'sitkBSpline',  # 这是一个枚举值，这里不允许None，指定图像插值器为'sitkBSpline'
+    'resampledPixelSpacing': None  # 这将禁用重采样，因为它被解释为None，要启用它，请指定x, y, z的间距为[x, y, z]
+    # 设置图像重采样的像素间距。如果为None，则禁用重采样；否则，指定 x、y、z 方向上的间距为 [x, y, z]
+}
+
+# “imageType”类别被省略，这将导致默认值：只使用“原始”（未过滤）图像，不使用额外的自定义设置
+
+# 必须计算的特征类。如果未提及某个特征类，则不计算该类的任何特征。
+# 否则，将计算指定的特征，或者，如果未指定特征，则计算所有特征（排除冗余/已弃用特征）。
+featureClass = {
+    'shape': [  # 通过指定所有其他形状特征来禁用冗余的紧凑度1和紧凑度2特征
+        'VoxelVolume',  # 体素体积
+        'MeshVolume',  # 网格体积
+        'SurfaceArea',  # 表面积
+        'SurfaceVolumeRatio',  # 表面积/体积比率
+        'Compactness1',  # 紧凑度1
+        'Compactness2',  # 紧凑度2
+        'Sphericity',  # 球度
+        'SphericalDisproportion',  # 球形不匹配度
+        'Maximum3DDiameter',  # 最大三维直径
+        'Maximum2DDiameterSlice',  # 最大二维直径（切片）
+        'Maximum2DDiameterColumn',  # 最大二维直径（列）
+        'Maximum2DDiameterRow',  # 最大二维直径（行）
+        'MajorAxisLength',  # 主轴长度
+        'MinorAxisLength',  # 次轴长度
+        'LeastAxisLength',  # 最小轴长度
+        'Elongation',  # 伸长度
+        'Flatness'  # 平坦度
+    ]
+}
